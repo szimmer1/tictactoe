@@ -1,11 +1,20 @@
 package board
 
+class BoardException(message: String = null, cause: Throwable = null) extends RuntimeException(message, cause)
+
 class Board(size: Int) {
   val _size = size
   var board = Array.ofDim[Int](size,size)
 
   def getCell(row: Int, col: Int) = board(row)(col)
-  def setCell(row: Int, col: Int, value: Int) = board(row)(col) = value
+
+  @throws(classOf[BoardException])
+  def setCell(row: Int, col: Int, value: Int) = {
+    if (getCell(row,col) == 0)
+      board(row)(col) = value
+    else
+      throw new BoardException("cell already set")
+  }
 
   def winner(): Int = {
     // check rows, then check columns, then check diagonals
